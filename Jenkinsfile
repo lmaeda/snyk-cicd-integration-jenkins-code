@@ -1,8 +1,20 @@
-node {
+pipeline {
+    agent any
 
-    def mavenHome = tool 'maven' // Refers to a global tool configuration for Maven called 'maven-3.8.4'
-    env.PATH="${env.PATH}:$mavenHome/bin"
+    // Install the Jenkins tools you need for your project / environment
+    tools {
+        maven 'maven' // Refers to a global tool configuration for Maven called 'maven-3.8.3'
+    }
 
+    // Pull your Snyk token from a Jenkins encrypted credential
+    // (type "Secret text"... see https://jenkins.io/doc/book/using/using-credentials/#adding-new-global-credentials)
+    // and put it in temporary environment variable for the Snyk CLI to consume.
+    environment {
+        SNYK_TOKEN = credentials('SNYK_TOKEN')
+    }
+    
+    stages {
+    
     stage('Initialize & Cleanup Workspace') {
        echo 'Initialize & Cleanup Workspace'
        sh 'ls -la'
@@ -49,5 +61,6 @@ node {
       steps {
         echo 'Deploying...'
       }
+    }
     }
 }
