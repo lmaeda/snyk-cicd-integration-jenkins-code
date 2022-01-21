@@ -32,5 +32,22 @@ node {
     stage('Build') {
         sh 'mvn package'
     }
-
+    stage('Test') {
+      steps {
+        echo 'Testing...'
+        snykSecurity(
+          snykInstallation: 'snyk@latest',
+          snykTokenId: 'SNYK_TOKEN',
+          failOnIssues: false,
+          failOnError: false,
+          organization: 'luc.maeda',
+          // place other parameters here
+        )
+      }
+    }
+    stage('Deploy') {
+      steps {
+        echo 'Deploying...'
+      }
+    }
 }
