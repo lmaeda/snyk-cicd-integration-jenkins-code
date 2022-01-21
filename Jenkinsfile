@@ -41,15 +41,6 @@ pipeline {
             }
         }
 
-        // Authorize the Snyk CLI
-        withCredentials([string(credentialsId: 'SNYK_TOKEN', variable: 'SNYK_TOKEN_VAR')]) {
-            stage('Authorize Snyk CLI') {
-                steps {
-                    sh './snyk auth ${SNYK_TOKEN_VAR}'
-                }
-            }
-        }
-
         stage('Build') {
             steps {
               sh 'mvn -e -X package'
