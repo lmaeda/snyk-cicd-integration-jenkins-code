@@ -56,7 +56,7 @@ pipeline {
               snykTokenId: 'SNYK_TOKEN',
               failOnIssues: false,
               failOnError: false,
-              organization: 'luc.maeda',
+              organisation: 'luc.maeda',
               // place other parameters here
             )
           }
