@@ -14,53 +14,66 @@ pipeline {
     }
     
     stages {
-    
-    stage('Initialize & Cleanup Workspace') {
-       echo 'Initialize & Cleanup Workspace'
-       sh 'ls -la'
-       sh 'rm -rf *'
-       sh 'rm -rf .git'
-       sh 'rm -rf .gitignore'
-       sh 'ls -la'
-    }
 
-    stage('Git Clone') {
-        git url: 'https://github.com/lmaeda/testproject-java-maven.git'
-        sh 'ls -la'
-    }
-
-    stage('Test Build Requirements') {
-        sh 'java -version'
-        sh 'mvn -v'
-    }
-
-    // Authorize the Snyk CLI
-    withCredentials([string(credentialsId: 'SNYK_TOKEN', variable: 'SNYK_TOKEN_VAR')]) {
-        stage('Authorize Snyk CLI') {
-            sh './snyk auth ${SNYK_TOKEN_VAR}'
+        stage('Initialize & Cleanup Workspace') {
+            steps {
+               echo 'Initialize & Cleanup Workspace'
+               sh 'ls -la'
+               sh 'rm -rf *'
+               sh 'rm -rf .git'
+               sh 'rm -rf .gitignore'
+               sh 'ls -la'
+            }
         }
-    }
 
-    stage('Build') {
-        sh 'mvn package'
-    }
-    stage('Test') {
-      steps {
-        echo 'Testing...'
-        snykSecurity(
-          snykInstallation: 'snyk@latest',
-          snykTokenId: 'SNYK_TOKEN',
-          failOnIssues: false,
-          failOnError: false,
-          organization: 'luc.maeda',
-          // place other parameters here
-        )
-      }
-    }
-    stage('Deploy') {
-      steps {
-        echo 'Deploying...'
-      }
-    }
+        stage('Git Clone') {
+            steps {
+                //git url: 'https://github.com/lmaeda/simple-java-maven-app.git'
+                git url: 'https://github.com/lmaeda/testproject-java-maven.git'
+                sh 'ls -la'
+            }
+        }
+
+        stage('Test Build Requirements') {
+            steps {
+                sh 'java -version'
+                sh 'mvn -v'
+            }
+        }
+
+        // Authorize the Snyk CLI
+        withCredentials([string(credentialsId: 'SNYK_TOKEN', variable: 'SNYK_TOKEN_VAR')]) {
+            stage('Authorize Snyk CLI') {
+                steps {
+                    sh './snyk auth ${SNYK_TOKEN_VAR}'
+                }
+            }
+        }
+
+        stage('Build') {
+            steps {
+              sh 'mvn -e -X package'
+              //sh './mvnw test -Dsnyk.skip'
+            }
+        }
+        
+        stage('Test') {
+          steps {
+            echo 'Testing...'
+            snykSecurity(
+              snykInstallation: 'snyk@latest',
+              snykTokenId: 'SNYK_TOKEN',
+              failOnIssues: false,
+              failOnError: false,
+              organization: 'luc.maeda',
+              // place other parameters here
+            )
+          }
+        }
+        stage('Deploy') {
+          steps {
+            echo 'Deploying...'
+          }
+        }
     }
 }
