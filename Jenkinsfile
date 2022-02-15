@@ -58,8 +58,8 @@ pipeline {
               failOnIssues: true,
               failOnError: false,
               organisation: 'demo_high',
-              severity: 'high',
-              additionalArguments: '--all-projects --print-deps',
+              severity: 'critical',
+              additionalArguments: '--all-projects --print-deps --fail-on=all',
               // place other parameters here
             )
           }
