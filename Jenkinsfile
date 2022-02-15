@@ -57,7 +57,8 @@ pipeline {
               failOnIssues: true,
               failOnError: false,
               organisation: 'demo_high',
-              additionalArguments: '--all-Projects',
+              additionalArguments: '--all-projects',
+              additionalArguments: '--print-deps',
               // place other parameters here
             )
           }
