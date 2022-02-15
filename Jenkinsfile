@@ -53,10 +53,10 @@ pipeline {
             echo 'Testing...'
             snykSecurity(
               snykInstallation: 'snyk@latest',
-              snykTokenId: 'SNYK_TOKEN',
-              failOnIssues: false,
+              //snykTokenId: 'SNYK_TOKEN',
+              failOnIssues: true,
               failOnError: false,
-              organisation: 'luc.maeda',
+              organisation: 'demo_high',
               // place other parameters here
             )
           }
